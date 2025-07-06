@@ -1,0 +1,16 @@
+[package]
+name = "genedle"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+axum = "0.8"
+tower-http = { version = "0.6", features = ["cors"] }
+tower-sessions = "0.14"
+tokio = { version = "1.46", features = ["rt-multi-thread"] }
+chrono = "0.4"
+serde = "1"
+anyhow = "1"
+rand = "*"
+reqwest = { version = "0.12", features = ["json"] }
+cached = { version = "0.55", features = ["async_tokio_rt_multi_thread"] }

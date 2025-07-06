@@ -1,0 +1,16 @@
+{
+    "editor.formatOnSave": true,
+    "rust-analyzer.check.allTargets": true,
+    "rust-analyzer.check.command": "clippy",
+    "rust-analyzer.checkOnSave": true,
+    "rust-analyzer.imports.merge.glob": false,
+    "rust-analyzer.linkedProjects": [
+        "backend/Cargo.toml",
+    ],
+    "rust-analyzer.rustfmt.extraArgs": [
+        "--config=group_imports=One,imports_granularity=Module"
+    ],
+    "rust-analyzer.cargo.features": "all",
+    "files.insertFinalNewline": true,
+    "files.eol": "\n",
+}
