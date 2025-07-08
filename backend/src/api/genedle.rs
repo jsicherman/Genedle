@@ -1,3 +1,4 @@
+use crate::api::{GeneNamesDoc, GeneNamesResponse};
 use axum::Json;
 use axum::extract::Path;
 use cached::proc_macro::cached;
@@ -73,30 +74,6 @@ pub enum LetterFeedback {
     Correct,
     Present,
     Absent,
-}
-
-#[derive(Deserialize, Debug, PartialEq, Eq, Clone)]
-#[serde(rename_all = "camelCase")]
-struct GeneNamesResponse<T: Serialize + PartialEq + Eq + Clone> {
-    response_header: GeneNamesResponseHeader,
-    response: GeneNamesResponseBody<T>,
-}
-
-#[derive(Deserialize, Debug, PartialEq, Eq, Clone, Copy)]
-struct GeneNamesResponseHeader {
-    status: usize,
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone)]
-#[serde(rename_all = "camelCase")]
-struct GeneNamesResponseBody<T: Serialize + PartialEq + Eq + Clone> {
-    num_found: usize,
-    docs: Vec<T>,
-}
-
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone)]
-struct GeneNamesDoc {
-    symbol: String,
 }
 
 pub async fn num_letters(Path(key): Path<u64>) -> Json<isize> {

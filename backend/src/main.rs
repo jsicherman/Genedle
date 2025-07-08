@@ -16,9 +16,16 @@ async fn main() {
 
     let app = Router::new()
         .route("/games/genedle", get(games::genedle::genedle))
-        //.route("/games/genections", get(genections))
-        //.route("/games/spelling-gene", get(spelling_gene))
+        .route("/games/genections", get(games::genections::genections))
+        .route(
+            "/games/spelling-gene",
+            get(games::spelling_gene::spelling_gene),
+        )
         .layer(session_layer)
+        .route(
+            "/api/v1/spelling-gene-guess/{seed}/{min_length}/{min_words}/{num_letters}/{guess}",
+            get(api::spelling_gene::check_guess),
+        )
         .route("/api/v1/genedle-guess", post(api::genedle::guess))
         .route(
             "/api/v1/genedle-letters/{id}",
