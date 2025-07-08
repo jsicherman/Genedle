@@ -1,0 +1,36 @@
+.scoreboard-container {
+    min-width: 400px;
+    margin: 0 auto 24px;
+    padding: 16px 20px;
+    background-color: #fffbea;
+    border: 1px solid #f3e9c1;
+    border-radius: 8px;
+    color: #333;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+}
+
+.scoreboard {
+    display: flex;
+    justify-content: space-between;
+    font-weight: 600;
+    font-size: 18px;
+    letter-spacing: 0.5px;
+}
+
+.word-list {
+    margin-top: 8px;
+    border-top: 1px solid #f0eccc;
+}
+
+.word-list ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.word-list li {
+    padding: 6px 4px;
+    font-size: 16px;
+}

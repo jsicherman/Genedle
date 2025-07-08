@@ -6,14 +6,20 @@ use rand::SeedableRng;
 use rand::rngs::StdRng;
 use rand::seq::SliceRandom;
 use reqwest::Client;
-use serde::{Deserialize, Serialize};
+use serde::Serialize;
 use std::collections::BTreeSet;
 
-#[derive(Serialize, Deserialize, Debug, PartialEq, Eq, Clone)]
+#[derive(Serialize, Debug, PartialEq, Eq, Clone)]
 pub struct SpellingGeneGame {
+    #[serde(flatten)]
+    pub metadata: SpellingGeneMetadata,
+    pub valid_symbols: BTreeSet<String>,
+}
+
+#[derive(Serialize, Debug, PartialEq, Eq, Clone)]
+pub struct SpellingGeneMetadata {
     pub outer_letters: Vec<&'static str>,
     pub center_letter: &'static str,
-    pub valid_symbols: BTreeSet<String>,
 }
 
 pub async fn check_guess(
@@ -25,7 +31,21 @@ pub async fn check_guess(
     }
 }
 
-pub async fn generate_game(
+pub async fn get_letters(
+    Path((seed, min_length, min_words, num_letters)): Path<(u64, usize, usize, u8)>,
+) -> Json<SpellingGeneMetadata> {
+    generate_game(min_length, min_words, num_letters, seed)
+        .await
+        .map(|game| Json(game.metadata))
+        .unwrap_or_else(|_| {
+            Json(SpellingGeneMetadata {
+                outer_letters: Vec::new(),
+                center_letter: "",
+            })
+        })
+}
+
+async fn generate_game(
     min_length: usize,
     min_words: usize,
     num_letters: u8,
@@ -45,7 +65,7 @@ async fn _generate_game(
 ) -> Result<SpellingGeneGame, String> {
     const API: &str = "https://rest.genenames.org/search/symbol/";
     const STATUS_SUCCESS: usize = 0;
-    const MAX_ITERS: usize = 100;
+    const MAX_ITERS: usize = 10_000;
     const VALID_LETTERS: [&str; 27] = [
         "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M", "N", "O", "P", "Q", "R",
         "S", "T", "U", "V", "W", "X", "Y", "Z", "-",
@@ -91,54 +111,77 @@ async fn _generate_game(
             .collect())
     };
 
-    let mut valid_words: BTreeSet<String> = BTreeSet::new();
-    let mut letters = Vec::new();
-    let mut iter = 0;
+    let mut all_symbols: BTreeSet<String> = BTreeSet::new();
 
-    // TODO: invert this logic to get words first then pick letters
-    while valid_words.len() < min_words && iter < MAX_ITERS {
+    let mut letters = VALID_LETTERS.to_vec();
+    letters.shuffle(&mut rng);
+    letters.truncate(num_letters as usize + 5);
+
+    for letter in letters {
+        if let Ok(symbols) = get_options(letter).await {
+            all_symbols.extend(
+                symbols
+                    .into_iter()
+                    .filter(|s| s.chars().count() >= min_length),
+            );
+        }
+    }
+
+    let mut iter = 0;
+    while iter < MAX_ITERS {
         iter += 1;
-        letters = VALID_LETTERS.to_vec();
+
+        let mut letters = VALID_LETTERS.to_vec();
         letters.shuffle(&mut rng);
         letters.truncate(num_letters as usize);
 
-        let chars: BTreeSet<_> = letters.iter().flat_map(|x| x.chars()).collect();
+        let mut letters_set: BTreeSet<char> = letters.iter().flat_map(|s| s.chars()).collect();
+        let center_letter = letters.pop().unwrap();
+        let center_char = center_letter.chars().next().unwrap();
+        letters_set.insert(center_char);
 
-        valid_words = get_options(letters.last().unwrap())
-            .await
-            .map_err(|err| err.to_string())?
-            .into_iter()
-            .filter(|word| {
-                word.chars().count() >= min_length && word.chars().all(|c| chars.contains(&c))
+        let filtered: BTreeSet<_> = all_symbols
+            .iter()
+            .filter(|symbol| {
+                symbol.contains(center_char) && symbol.chars().all(|c| letters_set.contains(&c))
             })
             .collect();
+
+        if filtered.len() >= min_words {
+            return Ok(SpellingGeneGame {
+                metadata: SpellingGeneMetadata {
+                    outer_letters: letters,
+                    center_letter,
+                },
+                valid_symbols: filtered.into_iter().cloned().collect(),
+            });
+        }
     }
 
-    let center_letter = letters.pop().unwrap();
-    Ok(SpellingGeneGame {
-        outer_letters: letters,
-        center_letter,
-        valid_symbols: valid_words,
-    })
+    Err("Failed to generate a valid game".to_string())
 }
 
 #[cfg(test)]
 mod tests {
     use crate::api::spelling_gene::generate_game;
+    use std::collections::HashSet;
 
     #[tokio::test]
     async fn test_generate_game() {
-        let game = generate_game(4, 10, 6, 0).await.unwrap();
+        let game = generate_game(4, 10, 7, 20277).await.unwrap();
 
         println!("{game:#?}");
 
-        assert!(game.outer_letters.len() == 5);
+        assert!(game.metadata.outer_letters.len() == 6);
         assert!(game.valid_symbols.len() >= 10);
         assert!(game.valid_symbols.iter().all(|symbol| {
             symbol.chars().count() >= 4
                 && symbol.chars().all(|c| {
-                    c.to_string() == game.center_letter
-                        || game.outer_letters.contains(&c.to_string().as_str())
+                    c.to_string() == game.metadata.center_letter
+                        || game
+                            .metadata
+                            .outer_letters
+                            .contains(&c.to_string().as_str())
                 })
         }));
     }

@@ -13,3 +13,21 @@ body {
     color-scheme: dark;
   }
 }
+
+/* Spelling gene */
+
+.guess-display {
+  text-align: center;
+  margin: 10px;
+}
+
+.guess-display h3 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
+
+.guess-display button {
+  margin: 0 10px;
+  padding: 8px 16px;
+  font-size: 16px;
+}

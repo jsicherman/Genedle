@@ -5,6 +5,7 @@ use axum::Router;
 use axum::routing::{get, post};
 use tokio::net::TcpListener;
 use tower_http::cors::CorsLayer;
+use tower_http::services::{ServeDir, ServeFile};
 use tower_sessions::cookie::time::Duration;
 use tower_sessions::{Expiry, MemoryStore, SessionManagerLayer};
 
@@ -14,7 +15,11 @@ async fn main() {
     let session_layer = SessionManagerLayer::new(session_store)
         .with_expiry(Expiry::OnInactivity(Duration::days(1)));
 
+    let static_files = ServeDir::new("../frontend/build/client")
+        .not_found_service(ServeFile::new("../frontend/build/client/index.html"));
+
     let app = Router::new()
+        .fallback_service(static_files)
         .route("/games/genedle", get(games::genedle::genedle))
         .route("/games/genections", get(games::genections::genections))
         .route(
@@ -25,6 +30,10 @@ async fn main() {
         .route(
             "/api/v1/spelling-gene-guess/{seed}/{min_length}/{min_words}/{num_letters}/{guess}",
             get(api::spelling_gene::check_guess),
+        )
+        .route(
+            "/api/v1/spelling-gene/{seed}/{min_length}/{min_words}/{num_letters}",
+            get(api::spelling_gene::get_letters),
         )
         .route("/api/v1/genedle-guess", post(api::genedle::guess))
         .route(

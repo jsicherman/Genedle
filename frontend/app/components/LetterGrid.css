@@ -1,0 +1,37 @@
+.hex-container {
+    position: relative;
+    width: 300px;
+    height: 300px;
+    margin: 40px auto;
+}
+
+.center-letter,
+.outer-letter {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100px;
+    height: 100px;
+    background-color: #c9c9c9;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 100px;
+    font-size: 24px;
+    transform: translate(-50%, -50%);
+    transition: transform 0.3s ease;
+    clip-path: polygon(50% 0%,
+            93% 25%,
+            93% 75%,
+            50% 100%,
+            7% 75%,
+            7% 25%);
+    cursor: pointer;
+    color: black;
+    font-weight: bold;
+}
+
+.center-letter {
+    background-color: #f8c81a;
+    font-weight: bold;
+    z-index: 2;
+}

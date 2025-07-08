@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, type JSX } from 'react';
-import type { Route } from './+types/home';
+import type { Route } from '../+types/root';
 
 type GuessState = 'correct' | 'present' | 'absent' | 'empty';
 
@@ -52,16 +52,16 @@ export function meta({ }: Route.MetaArgs) {
 }
 
 const App: React.FC = () => {
-  const seed = Math.floor(new Date().getTime() / (1000 * 60 * 60 * 24)) + 2;
+  const seed = Math.floor(new Date().getTime() / (1000 * 60 * 60 * 24));
 
-  const [secretWord, setSecretWord] = useState<number>(seed);
-  const [wordLength, setWordLength] = useState<number>(0);
+  const [secretWord, setSecretWord] = useState(seed);
+  const [wordLength, setWordLength] = useState(0);
   const [guesses, setGuesses] = useState<GuessRow[]>([]);
-  const [currentGuess, setCurrentGuess] = useState<string>('');
-  const [turn, setTurn] = useState<number>(0);
-  const [isGameOver, setIsGameOver] = useState<boolean>(false);
-  const [isHardMode, setIsHardMode] = useState<boolean>(true);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [currentGuess, setCurrentGuess] = useState('');
+  const [turn, setTurn] = useState(0);
+  const [isGameOver, setIsGameOver] = useState(false);
+  const [isHardMode, setIsHardMode] = useState(true);
+  const [isLoading, setIsLoading] = useState(false);
   const [keyboardColors, setKeyboardColors] = useState<Map<string, GuessState>>(new Map());
   const [message, setMessage] = useState<string | null>(null);
 
@@ -148,7 +148,7 @@ const App: React.FC = () => {
             checked={isHardMode}
             onChange={() => setIsHardMode(prevMode => !prevMode)}
           />
-          <div className={`block w-14 h-8 rounded-full transition ${isHardMode ? 'bg-blue-' + (guesses.length > 0 ? '400' : '600') : 'bg-gray-' + (guesses.length > 0 ? '400' : '600')}`}></div>
+          <div className={`block w-14 h-8 rounded-full transition ${isHardMode ? (guesses.length > 0 ? 'bg-blue-400' : 'bg-blue-600') : (guesses.length > 0 ? 'bg-gray-400' : 'bg-gray-600')}`}></div>
           <div className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition transform ${isHardMode ? 'translate-x-full' : 'translate-x-0'}`}></div>
         </div>
       </label>
