@@ -12,7 +12,7 @@
     left: 50%;
     width: 100px;
     height: 100px;
-    background-color: #c9c9c9;
+    background-color: oklch(0.928 0.006 264.531);
     border-radius: 50%;
     text-align: center;
     line-height: 100px;

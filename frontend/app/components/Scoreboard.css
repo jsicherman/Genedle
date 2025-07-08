@@ -2,8 +2,8 @@
     min-width: 400px;
     margin: 0 auto 24px;
     padding: 16px 20px;
-    background-color: #fffbea;
-    border: 1px solid #f3e9c1;
+    background-color: oklch(0.928 0.006 264.531);
+    border: 1px solid oklch(0.872 0.01 258.338);
     border-radius: 8px;
     color: #333;
     box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
@@ -19,7 +19,7 @@
 
 .word-list {
     margin-top: 8px;
-    border-top: 1px solid #f0eccc;
+    border-top: 1px solid oklch(0.872 0.01 258.338);
 }
 
 .word-list ul {

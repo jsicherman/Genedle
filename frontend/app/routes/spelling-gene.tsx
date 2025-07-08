@@ -113,9 +113,9 @@ const App: React.FC = () => {
             <Scoreboard score={score} count={guessedSymbols.length} words={guessedSymbols} />
             <LetterGrid letters={letters} onLetterClick={handleLetterClick} />
             <div className="guess-display">
-                <h3 className={currentGuess ? "text-gray-950" : "text-gray-300"}>{currentGuess ? currentGuess : "Guess"}</h3>
-                <button className="text-gray-950" onClick={handleSubmit}>Submit</button>
-                <button className="text-gray-950" onClick={handleClear}>Clear</button>
+                <h3 className={`text ${currentGuess ? "text-gray-950" : "text-gray-300"}`}>{currentGuess ? currentGuess : "Guess"}</h3>
+                <button className="button text-gray-950" onClick={handleSubmit}>Submit</button>
+                <button className="button text-gray-950" onClick={handleClear}>Clear</button>
             </div>
         </div>
     );

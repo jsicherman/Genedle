@@ -31,3 +31,14 @@ body {
   padding: 8px 16px;
   font-size: 16px;
 }
+
+.text {
+  cursor: default;
+}
+
+.button {
+  cursor: pointer;
+  border-radius: 6px;
+  background-color: oklch(0.928 0.006 264.531);
+  border-color: oklch(0.872 0.01 258.338);
+}
