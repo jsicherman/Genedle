@@ -52,7 +52,7 @@ export function meta({ }: Route.MetaArgs) {
 }
 
 const App: React.FC = () => {
-  const seed = Math.floor(new Date().getTime() / (1000 * 60 * 60 * 24));
+  const seed = Math.floor(new Date().getTime() / (1000 * 60 * 60 * 24)) + 2;
 
   const [secretWord, setSecretWord] = useState<number>(seed);
   const [wordLength, setWordLength] = useState<number>(0);
@@ -144,16 +144,16 @@ const App: React.FC = () => {
             type="checkbox"
             id="hard-mode-toggle"
             className="sr-only"
+            disabled={guesses.length > 0}
             checked={isHardMode}
             onChange={() => setIsHardMode(prevMode => !prevMode)}
           />
-          {/* The visual toggle switch */}
-          <div className={`block w-14 h-8 rounded-full transition ${isHardMode ? 'bg-blue-600' : 'bg-gray-600'}`}></div>
+          <div className={`block w-14 h-8 rounded-full transition ${isHardMode ? 'bg-blue-' + (guesses.length > 0 ? '400' : '600') : 'bg-gray-' + (guesses.length > 0 ? '400' : '600')}`}></div>
           <div className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition transform ${isHardMode ? 'translate-x-full' : 'translate-x-0'}`}></div>
         </div>
       </label>
     </div>;
-  }, [isHardMode]);
+  }, [isHardMode, guesses]);
 
   const renderBoard = useCallback(() => {
     const boardRows: JSX.Element[] = [];
