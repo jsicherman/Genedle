@@ -58,7 +58,7 @@ const App: React.FC = () => {
 
         const valid = async () => {
             try {
-                const response = await fetch(`http://127.0.0.1:3000/api/v1/spelling-gene-guess/${seed}/${min_length}/${min_symbols}/${num_letters}/${symbol}`, {
+                const response = await fetch(`http://${process.env.REACT_APP_HOST}:${process.env.REACT_APP_PORT}/api/v1/spelling-gene-guess/${seed}/${min_length}/${min_symbols}/${num_letters}/${symbol}`, {
                     method: "GET",
                     headers: {
                         "Content-Type": "application/json",
@@ -90,7 +90,7 @@ const App: React.FC = () => {
 
     useEffect(() => {
         const doFetch = async () => {
-            const response = await fetch(`http://127.0.0.1:3000/api/v1/spelling-gene/${seed}/${min_length}/${min_symbols}/${num_letters}`, {
+            const response = await fetch(`http://${process.env.REACT_APP_HOST}:${process.env.REACT_APP_PORT}/api/v1/spelling-gene/${seed}/${min_length}/${min_symbols}/${num_letters}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -110,7 +110,7 @@ const App: React.FC = () => {
 
     return (
         <div className="min-h-screen bg-gray-100 flex flex-col items-center justify-center p-4 font-inter">
-            <Scoreboard score={score} count={guessedSymbols.length} words={guessedSymbols} />
+            <Scoreboard score={score} count={guessedSymbols.length} genes={guessedSymbols} />
             <LetterGrid letters={letters} onLetterClick={handleLetterClick} />
             <div className="guess-display">
                 <h3 className={`text ${currentGuess ? "text-gray-950" : "text-gray-300"}`}>{currentGuess ? currentGuess : "Guess"}</h3>

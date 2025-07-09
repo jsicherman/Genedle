@@ -69,7 +69,7 @@ const App: React.FC = () => {
 
   useEffect(() => {
     const doFetch = async () => {
-      const response = await fetch(`http://127.0.0.1:3000/api/v1/genedle-letters/${secretWord}`, {
+      const response = await fetch(`http://${process.env.REACT_APP_HOST}:${process.env.REACT_APP_PORT}/api/v1/genedle-letters/${secretWord}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -94,7 +94,7 @@ const App: React.FC = () => {
       mode: isHardMode ? 'hard' : 'normal',
     };
 
-    const response = await fetch('http://127.0.0.1:3000/api/v1/genedle-guess', {
+    const response = await fetch(`http://${process.env.REACT_APP_HOST}:${process.env.REACT_APP_PORT}/api/v1/genedle-guess`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

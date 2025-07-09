@@ -1,16 +1,16 @@
 import "./Scoreboard.css";
 
-export default function Scoreboard({ score, count, words }: { score: number, count: number, words: string[] }) {
+export default function Scoreboard({ score, count, genes }: { score: number, count: number, genes: string[] }) {
     return (
         <div className="scoreboard-container">
             <div className="scoreboard">
                 <p>Score: {score}</p>
-                <p>Words: {count}</p>
+                <p>Genes: {count}</p>
             </div>
-            <div className="word-list">
+            <div className="gene-list">
                 <ul>
-                    {words.map((word, idx) => (
-                        <li key={idx}>{word}</li>
+                    {genes.map((gene, idx) => (
+                        <li key={idx}>{gene}</li>
                     ))}
                 </ul>
             </div>

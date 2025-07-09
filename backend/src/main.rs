@@ -42,6 +42,9 @@ async fn main() {
         )
         .layer(CorsLayer::permissive());
 
-    let listener = TcpListener::bind("127.0.0.1:3000").await.unwrap();
+    let host = std::env::var("GENEDLE_HOST").unwrap_or_else(|_| "0.0.0.0".to_string());
+    let port = std::env::var("GENEDLE_PORT").unwrap_or_else(|_| "3000".to_string());
+
+    let listener = TcpListener::bind(format!("{host}:{port}")).await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }

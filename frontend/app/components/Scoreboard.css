@@ -17,12 +17,12 @@
     letter-spacing: 0.5px;
 }
 
-.word-list {
+.gene-list {
     margin-top: 8px;
     border-top: 1px solid oklch(0.872 0.01 258.338);
 }
 
-.word-list ul {
+.gene-list ul {
     list-style: none;
     padding: 0;
     margin: 0;
@@ -30,7 +30,7 @@
     overflow-y: auto;
 }
 
-.word-list li {
+.gene-list li {
     padding: 6px 4px;
     font-size: 16px;
 }
